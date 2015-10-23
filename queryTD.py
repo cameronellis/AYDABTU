@@ -15,7 +15,7 @@ import time
 query = raw_input("Enter desired SQL query:\n")
 
 # Make sure these two variables are set to your specifications:
-url = 'https://myhost:1080/tdrest/systems/MYSYS/queries'
+url = 'http://dragon.teradata.ws:1080/tdrest/systems/MYSYS/queries'
 myAuth = 'Basic ZGJjOmRiYw=='
 
 # Leave these as they are
