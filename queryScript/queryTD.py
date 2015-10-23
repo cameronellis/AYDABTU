@@ -57,8 +57,9 @@ def rest_request ( query ,wsUser,wsPass):
     print json.dumps(results, indent=4, sort_keys=True)
 
     ts = str(int(time.time()))
+    filename = './temp/' + ts + '.json'
 
-    with open((ts + '.json'), 'w') as outfile:
+    with open(filename, 'w') as outfile:
     	json.dump(results, outfile, indent=4, sort_keys=True)
 
     return;
