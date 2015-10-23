@@ -37,6 +37,7 @@ for table in queryCmdTpl:
 	jsonData = vq.getJsonFromQuery(queryString)
 
 	jsonData = dict(jsonData)
+	print jsonData
 	#Convert to pandes object and pre-process that data
 	#pandasObj = pd.read_json(jsonData)
 	#print pandasObj
