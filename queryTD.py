@@ -4,6 +4,7 @@ import json
 import urllib2
 import base64
 import zlib
+import time
 
 # Overall WS Access Variables
 dbsAlias = 'xTD150'
@@ -53,7 +54,12 @@ def rest_request ( query ,wsUser,wsPass):
     # Parse response to confirm value JSON.
     results = json.loads(response);
 
-    print json.dumps(results, indent=4, sort_keys=True) 
+    print json.dumps(results, indent=4, sort_keys=True)
+
+    ts = str(int(time.time()))
+
+    with open((ts + '.json'), 'w') as outfile:
+    	json.dump(results, outfile, indent=4, sort_keys=True)
 
     return;
 
