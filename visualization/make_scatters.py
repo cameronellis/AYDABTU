@@ -20,35 +20,27 @@ queryCmdTpl = json.loads(query_file.read())
 #Perform SQL querys for all fields in each table and store corresponding JSON objects to a file
 #print vq.getJsonFromQuery("select \"Total Murders\", \"Shotguns\" from crime_data.murders_by_weapon_type")
 
-
-
 #Perform Querys and store them into an array of pandas data frames
 dfList = []
 for table in queryCmdTpl:
 	#Query the JSON Data
 	tbl_name = table
-	field_indices = queryCmdTpl[table]['indices']
 	field_names  = queryCmdTpl[table]['names']
+
+	for i in range(len(field_names)):
+		field_names[i] = str(field_names[i])
+
 	queryString = "select "
 	for name in field_names:
 		queryString += " \""+name+"\", "
 	queryString = queryString[:len(queryString)-2]
 	queryString += " from " + table
-	jsonData = vq.getJsonFromQuery(queryString)
+	jsonData = vq.getJsonFromQuery(queryString)["results"][0]["data"]
 
-	jsonData = dict(jsonData)
-	#Convert to pandes object and pre-process that data
-	#pandasObj = pd.read_json(jsonData)
-	#print pandasObj
-	#print pandasObj['data']
+	#Convert jsonData to a pandas dataframe
+	pdData = pd.DataFrame(jsonData, columns=field_names)
+	dfList.append(pdData)
 
-
-
-
-
-
-	#Convert data into pandas dataframes
-
-
+print dfList
 
 
