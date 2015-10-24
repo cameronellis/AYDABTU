@@ -1,8 +1,5 @@
 {
-	"cdc.national_divorce_trends": {
-		"names": ["# Divorces & Annulments", "Rate per 1000"]
-	},
-	"health.country_death_rates": {
-		"names": ["Age Group", "Number of Deaths"]
+	"housing_data.freddie_mae_house_price_index": {
+		"names": ["CA", "NY", "GA", "CO"]
 	}
 }
