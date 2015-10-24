@@ -108,13 +108,13 @@ dbases =   [['cdc', 'national_divorce_trends', 'national_marriage_trends'],
 			]
 
 # Define query template
-query = 'select * from '
+queryText = 'select * from '
 
 # Scrape down every table
 for i in range (dbases.length)
 	for x in range (dbases[i].length)
 		if (x != 0):
-			perform_query (query + dbases[i][0] + '.' + dbases[i][x], wsUser, wsPass)
+			perform_query (queryText + dbases[i][0] + '.' + dbases[i][x], wsUser, wsPass)
 			time.sleep(.1)
 
 
