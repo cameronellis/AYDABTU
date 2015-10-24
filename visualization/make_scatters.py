@@ -79,14 +79,37 @@ for featPairs in tblFeatPairs:
 
 	 	# Plot that shiznit
 	 	plt.figure(figNum)
+
 	 	plt.xlabel(featOneNdxName + "." + featOneNameSplit[2])
 		plt.ylabel(featTwoNdxName + "." + featTwoNameSplit[2])
-		plt.scatter(featOneData, featTwoData)
-		
-		coefficients = np.polyfit(featOneData, featTwoData, 1)
+
+		#Index to cut data from
+		cut_ndx = int(len(featOneData)*0.6)
+
+		#The Training set for the feature pair
+		featOneDataTrain = featOneData[:cut_ndx]
+		featTwoDataTrain = featTwoData[:cut_ndx]
+
+		#The Testing set for the feature pair
+		featOneDataTest = featOneData[cut_ndx:]
+		featTwoDataTest = featTwoData[cut_ndx:]
+
+
+
+		coefficients = np.polyfit(featOneDataTrain, featTwoDataTrain, 1)
+
 		polynomial = np.poly1d(coefficients)
-		ys = polynomial(featOneData)
-		plt.plot(featOneData, ys)
+		ys = polynomial(featOneDataTrain)
+
+
+		plt.scatter(featOneDataTrain, featTwoDataTrain)
+		plt.scatter(featOneDataTest, featTwoDataTest, color="red")
+		plt.plot(featOneDataTrain, ys)
+
+		#Make the Prediction for every point in the test set and calculate 
+		#Hamming Loss and MSE 
+
+
 plt.show()
 
 
