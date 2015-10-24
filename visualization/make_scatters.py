@@ -54,6 +54,8 @@ tblFeatPairs = []
 for tblFeats in all_features:
 	tblFeatPairs.append(list(it.combinations(tblFeats, 2)))
 
+
+
 figNum = 0
 for featPairs in tblFeatPairs:
 	for pair in featPairs:
@@ -80,9 +82,6 @@ for featPairs in tblFeatPairs:
 	 	# Plot that shiznit
 	 	plt.figure(figNum)
 
-	 	plt.xlabel(featOneNdxName + "." + featOneNameSplit[2])
-		plt.ylabel(featTwoNdxName + "." + featTwoNameSplit[2])
-
 		#Index to cut data from
 		cut_ndx = int(len(featOneData)*0.6)
 
@@ -106,10 +105,24 @@ for featPairs in tblFeatPairs:
 		plt.scatter(featOneDataTest, featTwoDataTest, color="red")
 		plt.plot(featOneDataTrain, ys)
 
-		#Make the Prediction for every point in the test set and calculate 
+		#Finally, Make the Prediction for every point in the test set and calculate 
 		#Hamming Loss and MSE 
 
+		#Create Y_HAT array
+		m = coefficients[0]
+		b = coefficients[1]
+		Y_HAT = []
 
+		MSE = 0
+		for i in range(len(featOneDataTest)):
+		 	prediction = m*featOneDataTest[i]+b
+		 	actual = featTwoDataTest[i]
+		 	MSE += (prediction - actual)**2
+		MSE = float(MSE)/len(featOneDataTest)
+
+		plt.xlabel(featOneNdxName + "." + featOneNameSplit[2])
+		plt.ylabel(featTwoNdxName + "." + featTwoNameSplit[2])
+		plt.title("THE MSE: " + str(MSE))
 plt.show()
 
 
