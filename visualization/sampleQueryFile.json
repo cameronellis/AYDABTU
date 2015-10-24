@@ -1,5 +1,8 @@
 {
-	"housing_data.freddie_mae_house_price_index": {
-		"names": ["CA", "NY", "GA", "CO"]
+	"national_fire_protection.fire_problem_overview": {
+		"names": ["Civilian Deaths", "Civilian Injuries", "Firefighter deaths", "Firefighter Injuries"]
+	},
+	"transportation.aircraft_accident_rates": {
+		"names": ["Aircraft Hours", "Major Accidents"]
 	}
 }
