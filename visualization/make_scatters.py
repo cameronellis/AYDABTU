@@ -6,6 +6,7 @@ import sys
 import json
 from sklearn import preprocessing
 import itertools as it
+from scipy.stats import linregress
 
 #Read Query File
 query_file = open(sys.argv[1], "r")
@@ -65,7 +66,6 @@ for featPairs in tblFeatPairs:
 		featOneNdxName = featOneNameSplit[0] + "." + featOneNameSplit[1]
 		featTwoNdxName = featTwoNameSplit[0] + "." + featTwoNameSplit[1]
 
-
 		featOneData = np.array(dfList[featOneNdxName][featOneNameSplit[2]])
 		featTwoData = np.array(dfList[featTwoNdxName][featTwoNameSplit[2]])
 
@@ -82,6 +82,11 @@ for featPairs in tblFeatPairs:
 	 	plt.xlabel(featOneNdxName + "." + featOneNameSplit[2])
 		plt.ylabel(featTwoNdxName + "." + featTwoNameSplit[2])
 		plt.scatter(featOneData, featTwoData)
+		
+		coefficients = np.polyfit(featOneData, featTwoData, 1)
+		polynomial = np.poly1d(coefficients)
+		ys = polynomial(featOneData)
+		plt.plot(featOneData, ys)
 plt.show()
 
 
