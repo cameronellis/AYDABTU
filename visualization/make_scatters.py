@@ -43,40 +43,45 @@ for table in queryCmdTpl:
 all_features = []
 for table in dfList.iteritems():
 	table_name = table[0]
+	tblFeats = []
 	for column_name in table[1].columns.values:
-		all_features.append(table_name + "." + column_name)
+		tblFeats.append(table_name + "." + column_name)
+	all_features.append(tblFeats)
 
 # A list of all possible feature pair combinations
-featPairs = list(it.combinations(all_features, 2))
+tblFeatPairs = []
+for tblFeats in all_features:
+	tblFeatPairs.append(list(it.combinations(tblFeats, 2)))
 
 figNum = 0
-for pair in featPairs:
-	figNum += 1
-	featOneName = pair[0]
-	featTwoName = pair[1]
-	featOneNameSplit = featOneName.split(".")
-	featTwoNameSplit = featTwoName.split(".")
+for featPairs in tblFeatPairs:
+	for pair in featPairs:
+		figNum += 1
+		featOneName = pair[0]
+		featTwoName = pair[1]
+		featOneNameSplit = featOneName.split(".")
+		featTwoNameSplit = featTwoName.split(".")
 
-	featOneNdxName = featOneNameSplit[0] + "." + featOneNameSplit[1]
-	featTwoNdxName = featTwoNameSplit[0] + "." + featTwoNameSplit[1]
+		featOneNdxName = featOneNameSplit[0] + "." + featOneNameSplit[1]
+		featTwoNdxName = featTwoNameSplit[0] + "." + featTwoNameSplit[1]
 
 
-	featOneData = np.array(dfList[featOneNdxName][featOneNameSplit[2]])
-	featTwoData = np.array(dfList[featTwoNdxName][featTwoNameSplit[2]])
+		featOneData = np.array(dfList[featOneNdxName][featOneNameSplit[2]])
+		featTwoData = np.array(dfList[featTwoNdxName][featTwoNameSplit[2]])
 
-	if(not(isinstance(featOneData[0], (int, long, float, complex)))):
- 		le.fit(featOneData)
- 		featOneData = le.transform(featOneData)
+		if(not(isinstance(featOneData[0], (int, long, float, complex)))):
+	 		le.fit(featOneData)
+	 		featOneData = le.transform(featOneData)
 
- 	if(not(isinstance(featTwoData[0], (int, long, float, complex)))):
- 		le.fit(featTwoData)
- 		featTwoData = le.transform(featTwoData)
+	 	if(not(isinstance(featTwoData[0], (int, long, float, complex)))):
+	 		le.fit(featTwoData)
+	 		featTwoData = le.transform(featTwoData)
 
- 	# Plot that shiznit
- 	plt.figure(figNum)
- 	plt.xlabel(featOneNdxName + "." + featOneNameSplit[2])
-	plt.ylabel(featTwoNdxName + "." + featTwoNameSplit[2])
-	plt.scatter(featOneData, featTwoData)
+	 	# Plot that shiznit
+	 	plt.figure(figNum)
+	 	plt.xlabel(featOneNdxName + "." + featOneNameSplit[2])
+		plt.ylabel(featTwoNdxName + "." + featTwoNameSplit[2])
+		plt.scatter(featOneData, featTwoData)
 plt.show()
 
 
