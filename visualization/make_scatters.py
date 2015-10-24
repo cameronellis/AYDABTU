@@ -82,25 +82,11 @@ for featPairs in tblFeatPairs:
 	 	plt.xlabel(featOneNdxName + "." + featOneNameSplit[2])
 		plt.ylabel(featTwoNdxName + "." + featTwoNameSplit[2])
 		plt.scatter(featOneData, featTwoData)
-
-		#Index to cut data from
-		cut_ndx = int(len(featOneData)*0.8)
-
-		#The Training set for the feature pair
-		featOneDataTrain = featOneData[:cut_ndx]
-		featTwoDataTrain = featTwoData[:cut_ndx]
-
-		#The Testing set for the feature pair
-		featOneDataTest = featOneDataTrain[cut_ndx:]
-		featTwoDataTest = featTwoDataTrain[cut_ndx:]
-
-
-		coefficients = np.polyfit(featOneDataTrain, featTwoDataTrain, 1)
+		
+		coefficients = np.polyfit(featOneData, featTwoData, 1)
 		polynomial = np.poly1d(coefficients)
-		ys = polynomial(featOneDataTrain)
-		plt.plot(featOneDataTrain, ys)
-
-
+		ys = polynomial(featOneData)
+		plt.plot(featOneData, ys)
 plt.show()
 
 
