@@ -1,9 +1,10 @@
 import vizQuery as vq
 import pandas as pd
-import numpy
-import matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
 import sys
 import json
+from sklearn import preprocessing
 
 ### TOP DOWN DESIGN:
 # 1. Read in query JSON
@@ -22,6 +23,7 @@ queryCmdTpl = json.loads(query_file.read())
 
 #Perform Querys and store them into an array of pandas data frames
 dfList = []
+le = preprocessing.LabelEncoder() #Used to encode categorical data
 for table in queryCmdTpl:
 	#Query the JSON Data
 	tbl_name = table
@@ -41,6 +43,38 @@ for table in queryCmdTpl:
 	pdData = pd.DataFrame(jsonData, columns=field_names)
 	dfList.append(pdData)
 
-print dfList
+#Encode any categorical data into integers using sklearn
+# for column in pdData:
+# 	if(not(isinstance(pdData[column][0], (int, long, float, complex)))):
+# 		npStrList = np.array(pdData[column])
+# 		le.fit(npStrList)
+# 		strEncodings = le.transform(npStrList)
+# 		pdData.append(pd.DataFrame(strEncodings))
+# 		#pdData.insert(0,column,npStrList)
+# 		dfList.append(pdData)
+
+#Make scatterplots of features with every other feature
+
+#Scatter plot when they are both numbers
+# feat1 = np.array(dfList[0]["# Divorces & Annulments"])
+# feat2 = np.array(dfList[0]["Rate per 1000"])
+# plt.xlabel("# Divorces & Annulments")
+# plt.ylabel("Rate per 1000")
+# plt.scatter(feat1, feat2)
+# plt.show()
+
+#Scatter plot when it is numbers and a string
+feat1 = np.array(dfList[1]["Age Group"])
+if(not(isinstance(feat1, (int, long, float, complex)))):
+ 		npStrList = np.array(pdData["Age Group"])
+ 		le.fit(npStrList)
+ 		feat1 = le.transform(npStrList)
+
+feat2 = np.array(dfList[1]["Number of Deaths"])
+plt.xlabel("Age Group")
+plt.ylabel("Number of Deaths")
+plt.scatter(feat1, feat2)
+plt.show()
+
 
 
