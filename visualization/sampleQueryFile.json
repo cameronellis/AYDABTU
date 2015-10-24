@@ -1,8 +1,8 @@
 {
-	"cdc.national_divorce_trends": {
-		"names": ["# Divorces & Annulments", "Rate per 1000"]
+	"national_fire_protection.fire_problem_overview": {
+		"names": ["Civilian Deaths", "Civilian Injuries", "Firefighter deaths", "Firefighter Injuries"]
 	},
-	"health.country_death_rates": {
-		"names": ["Age Group", "Number of Deaths"]
+	"transportation.aircraft_accident_rates": {
+		"names": ["Aircraft Hours", "Major Accidents"]
 	}
 }

@@ -1,15 +1,11 @@
 import vizQuery as vq
 import pandas as pd
-import numpy
-import matplotlib
+import numpy as np
+import matplotlib.pyplot as plt
 import sys
 import json
-
-### TOP DOWN DESIGN:
-# 1. Read in query JSON
-# 2. Perform query to get structure of tables in the JSON 
-# 3. Perform query for table objects and store an array of JSON for each table object
-# 4. Compare fields of each object to the fields of each other object
+from sklearn import preprocessing
+import itertools as it
 
 #Read Query File
 query_file = open(sys.argv[1], "r")
@@ -21,7 +17,8 @@ queryCmdTpl = json.loads(query_file.read())
 #print vq.getJsonFromQuery("select \"Total Murders\", \"Shotguns\" from crime_data.murders_by_weapon_type")
 
 #Perform Querys and store them into an array of pandas data frames
-dfList = []
+dfList = {}
+le = preprocessing.LabelEncoder() #Used to encode categorical data
 for table in queryCmdTpl:
 	#Query the JSON Data
 	tbl_name = table
@@ -39,8 +36,92 @@ for table in queryCmdTpl:
 
 	#Convert jsonData to a pandas dataframe
 	pdData = pd.DataFrame(jsonData, columns=field_names)
-	dfList.append(pdData)
+	dfList[tbl_name] = pdData
 
-print dfList
+
+#Create triangular matrix of feature pairs, re-label features to associate with tables too
+all_features = []
+for table in dfList.iteritems():
+	table_name = table[0]
+	tblFeats = []
+	for column_name in table[1].columns.values:
+		tblFeats.append(table_name + "." + column_name)
+	all_features.append(tblFeats)
+
+# A list of all possible feature pair combinations
+tblFeatPairs = []
+for tblFeats in all_features:
+	tblFeatPairs.append(list(it.combinations(tblFeats, 2)))
+
+figNum = 0
+for featPairs in tblFeatPairs:
+	for pair in featPairs:
+		figNum += 1
+		featOneName = pair[0]
+		featTwoName = pair[1]
+		featOneNameSplit = featOneName.split(".")
+		featTwoNameSplit = featTwoName.split(".")
+
+		featOneNdxName = featOneNameSplit[0] + "." + featOneNameSplit[1]
+		featTwoNdxName = featTwoNameSplit[0] + "." + featTwoNameSplit[1]
+
+
+		featOneData = np.array(dfList[featOneNdxName][featOneNameSplit[2]])
+		featTwoData = np.array(dfList[featTwoNdxName][featTwoNameSplit[2]])
+
+		if(not(isinstance(featOneData[0], (int, long, float, complex)))):
+	 		le.fit(featOneData)
+	 		featOneData = le.transform(featOneData)
+
+	 	if(not(isinstance(featTwoData[0], (int, long, float, complex)))):
+	 		le.fit(featTwoData)
+	 		featTwoData = le.transform(featTwoData)
+
+	 	# Plot that shiznit
+	 	plt.figure(figNum)
+	 	plt.xlabel(featOneNdxName + "." + featOneNameSplit[2])
+		plt.ylabel(featTwoNdxName + "." + featTwoNameSplit[2])
+		plt.scatter(featOneData, featTwoData)
+plt.show()
+
+
+#Encode any categorical data into integers using sklearn
+# for column in pdData:
+# 	if(not(isinstance(pdData[column][0], (int, long, float, complex)))):
+# 		npStrList = np.array(pdData[column])
+# 		le.fit(npStrList)
+# 		strEncodings = le.transform(npStrList)
+# 		pdData.append(pd.DataFrame(strEncodings))
+# 		#pdData.insert(0,column,npStrList)
+# 		dfList.append(pdData)
+
+#Scatter plot when they are both numbers
+# feat1 = np.array(dfList[0]["# Divorces & Annulments"])
+# feat2 = np.array(dfList[0]["Rate per 1000"])
+# plt.xlabel("# Divorces & Annulments")
+# plt.ylabel("Rate per 1000")
+
+
+
+# #Scatter plot when it is numbers and a string
+# feat3 = np.array(dfList[1]["Age Group"])
+# if(not(isinstance(feat1, (int, long, float, complex)))):
+#  		npStrList = np.array(pdData["Age Group"])
+#  		le.fit(npStrList)
+#  		feat3 = le.transform(npStrList)
+
+# feat4 = np.array(dfList[1]["Number of Deaths"])
+# plt.xlabel("Age Group")
+# plt.ylabel("Number of Deaths")
+
+# plt.figure(1)
+# plt.scatter(feat1, feat2)
+# plt.figure(2)
+# plt.scatter(feat3, feat4)
+# plt.show()
+
+
+
+
 
 
