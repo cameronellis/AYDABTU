@@ -1,0 +1,10 @@
+{
+	"cdc.national_divorce_trends": {
+		"indices": [1, 3], 
+		"names": ["# Divorces & Annulments", "Rate per 1000"]
+	},
+	"health.country_death_rates": {
+		"indices": [3, 4],
+		"names": ["Age Group", "Number of Deaths"]
+	}
+}
