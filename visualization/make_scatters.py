@@ -7,6 +7,7 @@ import json
 from sklearn import preprocessing
 import itertools as it
 from scipy.stats import linregress
+from sklearn.cross_validation import train_test_split
 
 #Read Query File
 query_file = open(sys.argv[1], "r")
@@ -85,6 +86,8 @@ for featPairs in tblFeatPairs:
 		#Index to cut data from
 		cut_ndx = int(len(featOneData)*0.6)
 
+		
+
 		#The Training set for the feature pair
 		featOneDataTrain = featOneData[:cut_ndx]
 		featTwoDataTrain = featTwoData[:cut_ndx]
@@ -93,6 +96,10 @@ for featPairs in tblFeatPairs:
 		featOneDataTest = featOneData[cut_ndx:]
 		featTwoDataTest = featTwoData[cut_ndx:]
 
+		# CRAZY TRAINING SPLIT STUFF
+		#------------------------------------
+		featOneDataTrain, featOneDataTest, featTwoDataTrain, featTwoDataTest = train_test_split(featOneData, featTwoData, test_size = .2)
+		#----------------------------------
 
 
 		coefficients = np.polyfit(featOneDataTrain, featTwoDataTrain, 1)
