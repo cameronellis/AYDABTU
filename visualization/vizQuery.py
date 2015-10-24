@@ -53,7 +53,7 @@ def rest_request (query ,wsUser,wsPass):
     # Parse response to confirm value JSON.
     results = json.loads(response);
 
-    return json.dumps(results, indent=4, sort_keys=True)
+    return results
 
 def getJsonFromQuery(query):
     return rest_request(query,"hack_user02","tdhackathon")
