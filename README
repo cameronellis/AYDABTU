@@ -1,12 +1,14 @@
 # AYDABTU
-All Your Data Are Belong To Us - Our team project for the 2015 Teradata UCSD hackathon
+All Your Data Are Belong To Us
+
+First Place project for the 2015 Teradata UCSD Hackathon
 
 This repository contains the code that we created for the Teradata UCSD Hackathon.
 
 We had a team of five students, representing the UCSD Data Science Student Society:
 Joshua Wheeler, Nathan Moreno, Camille Schlesinger, Cameron Ellis, Chad Atalla
 
-The code was developed over the course of 8 hours, and our team took first place.
+The code was developed over the course of 8 hours.
 
 The project includes a few tools with different purposes:
 - Simplify the query and save process through the Teradata REST API (for Teradata SQL databases)
