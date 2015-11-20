@@ -5,10 +5,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import json
-from sklearn import preprocessing
+from sklearn import preprocessing, datasets, linear_model
+from sklearn.cross_validation import train_test_split
 import itertools as it
 from scipy.stats import linregress
-from sklearn.cross_validation import train_test_split
 import warnings
 
 #Read Query File
@@ -89,14 +89,19 @@ for featPairs in tblFeatPairs:
 	 	# Set up the new figure
 	 	plt.figure(figNum)
 
+
+	 	# Eliminate outliers
+	 	tolerable = (np.std(featTwoData))**1.068
+		model_ransac = linear_model.RANSACRegressor(linear_model.LinearRegression(), residual_threshold=tolerable, max_trials=2000)
+		featOne = [[x] for x in featOneData]
+		model_ransac.fit(featOne, featTwoData)
+		inlier_mask = model_ransac.inlier_mask_
+		outlier_mask = np.logical_not(inlier_mask)
+
 		# Split into test and train sets
-		featOneDataTrain, featOneDataTest, featTwoDataTrain, featTwoDataTest = train_test_split(featOneData, featTwoData, test_size = .2)
+		featOneDataTrain, featOneDataTest, featTwoDataTrain, featTwoDataTest = train_test_split(featOneData[inlier_mask], featTwoData[inlier_mask], test_size = .2)
 
-		# Linear regression!
-		coefficients = np.polyfit(featOneDataTrain, featTwoDataTrain, 1)
-		polynomial = np.poly1d(coefficients)
-		ys = polynomial(featOneDataTrain)
-
+		# MACHINE LEARNING
 		# NEW linear regression
 		slope, intercept, r_value, p_value, std_err = linregress(featOneDataTrain, featTwoDataTrain)
 		m = slope
@@ -109,16 +114,11 @@ for featPairs in tblFeatPairs:
 		# Plot the data points
 		plt.scatter(featOneDataTrain, featTwoDataTrain, color="blue")
 		plt.scatter(featOneDataTest, featTwoDataTest, color="yellow")
+		plt.scatter(featOneData[outlier_mask], featTwoData[outlier_mask], color="red")
 		plt.plot(featOneDataTrain, ys)
 
 		#Finally, Make the Prediction for every point in the test set and calculate 
 		#Hamming Loss and MSE 
-
-		#Create Y_HAT array
-		m = coefficients[0]
-		b = coefficients[1]
-		Y_HAT = []
-
 		MSE = 0
 		for i in range(len(featOneDataTest)):
 		 	prediction = m*featOneDataTest[i]+b
@@ -135,7 +135,7 @@ os.system('clear')
 sortedR = sorted(rsv.items(), key=lambda rsv: rsv[1])
 print "*\nPossible strong correlation between (Top 10%)"
 for x in range (len(sortedR)/10):
-	print "\n#" + (x+1) + ": " + sortedR[len(sortedR)-(x+1)][0] + "\n"
+	print "\n#" + (x+1) + ": " + sortedR[len(sortedR)-(x+1)][0] + ": with r^2 = " + sortedR[len(sortedR)-(x+1)][1] + "\n"
 # If none were printed, print the best one
 if (len(sortedR)/10) < 1:
 	print "\n#1: " + sortedR[len(sortedR)-1][0] + "\n"
