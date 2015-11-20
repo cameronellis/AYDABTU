@@ -3,7 +3,7 @@ from Tkinter import *
 def show_entry_fields():
 	#print("Database Name: %s\nTable Name: %s\nField Name 1: %s\nField name 2: %s" % (e4.get(), e1.get(), e2.get(), e3.get()))
 	fo = open("query.json", "wb")
-	fo.write("{\n\t" + '"'+ e4.get() + '":{\n\t\t' + '"' + e1.get() +'":["' + e2.get()+'","'+e3.get()+'"]\n}\n}\n');
+	fo.write("{\n\t" + '"'+ e4.get() + '":{\n\t\t' + '"' + e1.get() +'":["' + e2.get()+'","'+e3.get()+'"]\n\t}\n}\n');
 	fo.close();
 	e1.delete(0,END)
 	e2.delete(0,END)
