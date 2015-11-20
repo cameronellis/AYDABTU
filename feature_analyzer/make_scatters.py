@@ -92,7 +92,7 @@ for featPairs in tblFeatPairs:
 
 	 	# Eliminate outliers
 	 	tolerable = (np.std(featTwoData))**1.068
-		model_ransac = linear_model.RANSACRegressor(linear_model.LinearRegression(), residual_threshold=tolerable, max_trials=2000)
+		model_ransac = linear_model.RANSACRegressor(linear_model.LinearRegression(), residual_threshold=tolerable, max_trials=1000)
 		featOne = [[x] for x in featOneData]
 		model_ransac.fit(featOne, featTwoData)
 		inlier_mask = model_ransac.inlier_mask_
