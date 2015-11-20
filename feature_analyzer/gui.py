@@ -2,7 +2,7 @@ from Tkinter import *
 import dbList
 
 class ext_gui:
-	def __init__(self,fieldCount):
+	def __init__(self):
 		
 		master = Tk()
 		
@@ -72,5 +72,5 @@ class ext_gui:
 
 
 	
-
+gooey = ext_gui()
 mainloop( )

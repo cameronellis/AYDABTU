@@ -1,3 +1,4 @@
+import os
 import vizQuery as vq
 import pandas as pd
 import numpy as np
@@ -8,6 +9,7 @@ from sklearn import preprocessing
 import itertools as it
 from scipy.stats import linregress
 from sklearn.cross_validation import train_test_split
+import warnings
 
 #Read Query File
 query_file = open(sys.argv[1], "r")
@@ -56,8 +58,10 @@ tblFeatPairs = []
 for tblFeats in all_features:
 	tblFeatPairs.append(list(it.combinations(tblFeats, 2)))
 
+# Track coefficients of determination
+rsv = {}
 
-
+# Plot and calculate error
 figNum = 0
 for featPairs in tblFeatPairs:
 	for pair in featPairs:
@@ -73,6 +77,7 @@ for featPairs in tblFeatPairs:
 		featOneData = np.array(dfList[featOneNdxName][featOneNameSplit[2]])
 		featTwoData = np.array(dfList[featTwoNdxName][featTwoNameSplit[2]])
 
+		# Handle cases of non-numerical data
 		if(not(isinstance(featOneData[0], (int, long, float, complex)))):
 	 		le.fit(featOneData)
 	 		featOneData = le.transform(featOneData)
@@ -81,23 +86,29 @@ for featPairs in tblFeatPairs:
 	 		le.fit(featTwoData)
 	 		featTwoData = le.transform(featTwoData)
 
-	 	# Plot the results
+	 	# Set up the new figure
 	 	plt.figure(figNum)
-
-		#Index to cut data from
-		cut_ndx = int(len(featOneData)*0.6)
 
 		# Split into test and train sets
 		featOneDataTrain, featOneDataTest, featTwoDataTrain, featTwoDataTest = train_test_split(featOneData, featTwoData, test_size = .2)
 
+		# Linear regression!
 		coefficients = np.polyfit(featOneDataTrain, featTwoDataTrain, 1)
-
 		polynomial = np.poly1d(coefficients)
 		ys = polynomial(featOneDataTrain)
 
+		# NEW linear regression
+		slope, intercept, r_value, p_value, std_err = linregress(featOneDataTrain, featTwoDataTrain)
+		m = slope
+		b = intercept
+		polynomial = np.poly1d([m,b])
+		ys = polynomial(featOneDataTrain)
+		# Track r^2 of all plots
+		rsv[featOneName + " --AND-- " + featTwoName] = (r_value**2) 
 
-		plt.scatter(featOneDataTrain, featTwoDataTrain)
-		plt.scatter(featOneDataTest, featTwoDataTest, color="red")
+		# Plot the data points
+		plt.scatter(featOneDataTrain, featTwoDataTrain, color="blue")
+		plt.scatter(featOneDataTest, featTwoDataTest, color="yellow")
 		plt.plot(featOneDataTrain, ys)
 
 		#Finally, Make the Prediction for every point in the test set and calculate 
@@ -118,11 +129,21 @@ for featPairs in tblFeatPairs:
 		plt.xlabel(featOneNdxName + "." + featOneNameSplit[2])
 		plt.ylabel(featTwoNdxName + "." + featTwoNameSplit[2])
 		plt.title("THE MSE: " + str(MSE))
+
+# Compare all coefficients of determination to identify best fits
+os.system('clear')
+sortedR = sorted(rsv.items(), key=lambda rsv: rsv[1])
+print "*\nPossible strong correlation between (Top 10%)"
+for x in range (len(sortedR)/10):
+	print "\n#" + (x+1) + ": " + sortedR[len(sortedR)-(x+1)][0] + "\n"
+# If none were printed, print the best one
+if (len(sortedR)/10) < 1:
+	print "\n#1: " + sortedR[len(sortedR)-1][0] + "\n"
+
+
+# Filter pandas future warning
+warnings.simplefilter(action = "ignore", category = FutureWarning)
+
+# Show all the plots
 plt.show()
-
-
-
-
-
-
 
