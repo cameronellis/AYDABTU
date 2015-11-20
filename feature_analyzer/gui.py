@@ -60,7 +60,6 @@ class ext_gui:
 		for table in (dbList.dbases[db_name]).keys():
 			menu.add_command(label=table, command=lambda value=table: self.varSel[1].set(value))
 
-
 	def update_field_options(self,a,b,c):
 		db_name = self.varSel[0].get()
 		t_name = self.varSel[1].get()
