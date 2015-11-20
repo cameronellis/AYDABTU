@@ -47,8 +47,9 @@ class ext_gui:
 	def show_entry_fields(self):
 		fo = open("query.json", "wb")
 		listr = [var.get() for var in self.varSel if len(var.get()) > 0]
+		print listr
 		fo.write("{\n\t" + '"'+ self.varSel[0].get() + '.' + self.varSel[1].get() + '":{\n\t\t' + '"names":["'+listr[2]+'"')
-		for i in range(2,len(listr)):
+		for i in range(3,len(listr)):
 			fo.write(',"'+listr[i]+'"')
 		fo.write(']\n\t}\n}\n');
 		fo.close();
