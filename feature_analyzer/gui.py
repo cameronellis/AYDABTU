@@ -73,6 +73,24 @@ class ext_gui:
 				menu.add_command(label=field, command=lambda value=[self.varSel[i],field]: value[0].set(value[1]))
 
 
-	
-gooey = ext_gui(6,1)
+def initGooey(inNum):
+	gooey = ext_gui(int(inNum),1)
+	mainloop( )
+
+def closePrompt():
+	inputVal = entry.get()
+	entry.delete(0,END)
+	prompt.quit()
+	initGooey(inputVal)
+
+prompt = Tk()
+inputVal = 0
+Label(prompt, text="Please insert desired # of fields").grid(row=0)
+entry = Entry(prompt)
+entry.insert(10, "NUMBERS ONLY")
+entry.grid(row=1,column=0)	
+Button(prompt, text='Continue', command=closePrompt).grid(row=2, column=0, sticky=W, pady=4)
 mainloop( )
+
+	
+
