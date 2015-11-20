@@ -5,6 +5,8 @@ import base64
 import zlib
 import time
 
+
+# THIS CAN BE CHANGED TO WORK WITH ANY TERADATA DATABASE / REST API
 # Overall WS Access Variables
 dbsAlias = 'xTD150'
 wsHost = 'dragon.teradata.ws'
@@ -12,6 +14,9 @@ wsPort =  '1080'
 path = '/tdrest/systems/' + dbsAlias + '/queries'
 wsUser = 'hack_user02'
 wsPass = 'tdhackathon'
+#------------------------------------------------------------------
+
+
 
 def rest_request (query ,wsUser,wsPass):
     url = 'http://' + wsHost + ':' + wsPort + path
