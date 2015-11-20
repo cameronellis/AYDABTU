@@ -2,7 +2,7 @@ from Tkinter import *
 import dbList
 
 class ext_gui:
-	def __init__(self,fieldCount):
+	def __init__(self,fieldCount,colCount):
 		
 		self.master = Tk()
 
@@ -29,25 +29,28 @@ class ext_gui:
 		self.varSel[1].trace("w",self.update_field_options)
 
 		for i in range(0,fieldCount):
-			self.addField()
+			self.addField(1)
 
 		Button(self.master, text='Done', command=self.show_entry_fields).grid(row=len(self.varSel)+1, column=0, sticky=W, pady=4)
 		#Button(self.master, text='+ fields', command=self.addField).grid(row=len(self.varSel)+1, column=1, sticky=W, pady=4)
-
 		
-	def addField(self):
+	def addField(self,inCol):
 		i = len(self.varSel)
 		self.varSel.append(StringVar(self.master))
 		label = "Field Name " + str(i-1)
 		self.labels.append(label)
 		self.fields.append(OptionMenu(self.master,self.varSel[i],*self.field_options))
 		self.fields[i].config(width=20)
-		self.fields[i].grid(row=i, column=1)
+		self.fields[i].grid(row=i, column=inCol)
 		Label(self.master, text=self.labels[i]).grid(row=i)
 
-	def show_entry_fields():
+	def show_entry_fields(self):
 		fo = open("query.json", "wb")
-		fo.write("{\n\t" + '"'+ varSel[0].get() + '":{\n\t\t' + '"' + varSel[1].get() +'":["' + varSel[2].get()+'","'+varSel[3].get()+'"]\n\t}\n}\n');
+		listr = [var.get() for var in self.varSel if len(var.get()) > 0]
+		fo.write("{\n\t" + '"'+ self.varSel[0].get() + '":{\n\t\t' + '"' + self.varSel[1].get() +'":[')
+		for i in range(2,len(listr)):
+			fo.write('"'+listr[i]+'",')
+		fo.write(']\n\t}\n}\n');
 		fo.close();
 		for f in self.fields:
 			f.children["menu"].delete(0,END)
@@ -67,9 +70,9 @@ class ext_gui:
 			menu = self.fields[i].children["menu"]
 			menu.delete(0, "end")
 			for field in dbList.dbases[db_name][t_name]:
-				menu.add_command(label=field, command=lambda value=field: self.varSel[i].set(value))
+				menu.add_command(label=field, command=lambda value=[self.varSel[i],field]: value[0].set(value[1]))
 
 
 	
-gooey = ext_gui(6)
+gooey = ext_gui(6,1)
 mainloop( )

@@ -1,10 +1,5 @@
 {
-	"national_fire_protection.fire_problem_overview":{
-		"names":["Civilian Deaths","Firefighter deaths","Firefighter Injuries", "Civilian Injuries"
-
-]
-    },
-    	"database.tablename":{
-    		"names":["field1", "field2", "etc"]
-    }
+	"crime_data":{
+		"police_military_purchases":["Niin Item Name","Ship Date",]
+	}
 }
